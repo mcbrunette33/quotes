@@ -8,4 +8,13 @@ public class Quotes {
         this.author = author;
         this.text = text;
     }
+
+    @Override
+    public String toString()
+    {
+        return "QUOTE{ " +
+                "Author: " + author + "\n"  +
+                "Text: " + text + "\n" +
+                "}";
+    }
 }
