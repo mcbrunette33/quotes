@@ -13,7 +13,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)
+    {
+        try{
+            new App().run();
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    public void run() throws IOException
+    {
         Gson gson = new Gson();
         File jsonFile = new File("app/src/main/resources/recentquotes.json");
         FileReader jsonFileReader = new FileReader(jsonFile);
