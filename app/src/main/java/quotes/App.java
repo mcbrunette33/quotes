@@ -19,7 +19,7 @@ public class App {
         FileReader jsonFileReader = new FileReader(jsonFile);
         Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
         ArrayList<Quotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
-        System.out.println(quotesArrayList.get(69).text);
+        System.out.println(quotesArrayList.get(9).text);
 
     }
 }
