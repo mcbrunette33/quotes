@@ -4,12 +4,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Quotes {
-    public String author;
-    public String text;
+    String quoteText;
+    String quoteAuthor;
+    String senderName;
+    String senderLink;
+    String quoteLink;
 
-    public Quotes(String author, String text) {
-        this.author = author;
-        this.text = text;
+
+
+    @Override
+    public String toString()
+    {
+        return "QUOTE{ " +
+                "quoteText: " + quoteText + "\n"  +
+                "quoteAuthor: " + quoteAuthor + "\n" +
+                "senderName: " + senderName + "\n" +
+                "senderLink: " + senderLink + "\n" +
+                "quoteLink: " + quoteLink + "\n" +
+                "}";
     }
 
     @Override
