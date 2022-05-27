@@ -5,16 +5,16 @@ package quotes;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import javax.net.ssl.*;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class App {
+public class App
+{
     Gson gson = new Gson();
     public static void main(String[] args)
     {
@@ -34,13 +34,18 @@ public class App {
         }
         return;
     }
-    public void run(String fileName) throws IOException {
+    public void run(String fileName) throws IOException
+    {
         //dis the URL
-        createRequest(fileName);
-
+        HttpURLConnection test = createRequest(fileName);
+        StringBuffer responseBuffer =  readResponse(test);
+        Quotes newQuote = parseQuote(responseBuffer);
+        //for usage of ./gradlew test --args result will pring out content
+        System.out.println(newQuote.toString());
 
     }
-    public HttpURLConnection createRequest(String fileName) throws IOException {
+    public HttpURLConnection createRequest(String fileName) throws IOException
+    {
         //dis the URL
         URL quoteUrl = new URL(fileName);
         //we want type HttpURL connection so we must cast
@@ -68,6 +73,104 @@ public class App {
     {
         Quotes newQuote = gson.fromJson(String.valueOf(_content), Quotes.class);
         return newQuote;
+    }
+
+    public StarWars parseStarWars(StringBuffer _content)
+    {
+        StarWars newQuote = gson.fromJson(String.valueOf(_content), StarWars.class);
+        return newQuote;
+    }
+
+    public HttpsURLConnection secureCreateRequest(String fileName) throws IOException
+    {
+        //dis the URL
+        URL quoteUrl = new URL(fileName);
+        //we want type HttpURL connection so we must cast
+        trustAllHosts();
+        HttpsURLConnection quoteUrlConnection = (HttpsURLConnection) quoteUrl.openConnection();
+        quoteUrlConnection.setHostnameVerifier(DO_NOT_VERIFY);
+        quoteUrlConnection.setRequestMethod(("GET"));
+        quoteUrlConnection.setDoOutput(true);
+        quoteUrlConnection.setDoInput(true);
+
+        return quoteUrlConnection;
+    }
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    };
+    public void trustAllHosts()
+    {
+        try
+        {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509ExtendedTrustManager()
+                    {
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers()
+                        {
+                            return null;
+                        }
+
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                        {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                        {
+                        }
+
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] xcs, String string, Socket socket) throws CertificateException
+                        {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] xcs, String string, Socket socket) throws CertificateException
+                        {
+
+                        }
+
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] xcs, String string, SSLEngine ssle) throws CertificateException
+                        {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] xcs, String string, SSLEngine ssle) throws CertificateException
+                        {
+
+                        }
+
+                    }
+            };
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // Create all-trusting host name verifier
+            HostnameVerifier allHostsValid = new  HostnameVerifier()
+            {
+                @Override
+                public boolean verify(String hostname, SSLSession session)
+                {
+                    return true;
+                }
+            };
+            // Install the all-trusting host verifier
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error occurred" +e);
+            System.exit(-1);
+        }
     }
 
 
