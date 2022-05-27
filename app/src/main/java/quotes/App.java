@@ -35,7 +35,9 @@ public class App
     {
 
         //dis the URL
-        HttpURLConnection test = createRequest(fileName);
+        HttpURLConnection test = fileName.equals("https://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote")?
+                secureCreateRequest(fileName):
+                createRequest(fileName);
         StringBuffer responseBuffer =  readResponse(test);
         boolean checker = responseBuffer.isEmpty();
         if(checker == true)defaultQuote();
