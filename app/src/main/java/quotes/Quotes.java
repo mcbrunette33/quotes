@@ -1,20 +1,23 @@
 package quotes;
 
 public class Quotes {
-    public String author;
-    public String text;
+    String quoteText;
+    String quoteAuthor;
+    String senderName;
+    String senderLink;
+    String quoteLink;
 
-    public Quotes(String author, String text) {
-        this.author = author;
-        this.text = text;
-    }
+
 
     @Override
     public String toString()
     {
         return "QUOTE{ " +
-                "Author: " + author + "\n"  +
-                "Text: " + text + "\n" +
+                "quoteText: " + quoteText + "\n"  +
+                "quoteAuthor: " + quoteAuthor + "\n" +
+                "senderName: " + senderName + "\n" +
+                "senderLink: " + senderLink + "\n" +
+                "quoteLink: " + quoteLink + "\n" +
                 "}";
     }
 }

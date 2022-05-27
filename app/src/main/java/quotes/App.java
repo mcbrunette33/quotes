@@ -5,18 +5,27 @@ package quotes;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class App {
+    Gson gson = new Gson();
     public static void main(String[] args)
     {
+        //Gson gson = new Gson();
+        //File jsonFile = new File("app/src/main/resources/recentquotes.json");
+        //FileReader jsonFileReader = new FileReader(jsonFile);
+        //Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
+        //ArrayList<Quotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
+        //System.out.println(quotesArrayList.get(69).author);
         try{
-            new App().run();
+            new App().run(args[0]);
         }
         catch (IOException e)
         {
@@ -25,23 +34,42 @@ public class App {
         }
         return;
     }
-    public void run() throws IOException {
-        Gson gson = new Gson();
-        File jsonFile = new File("app/src/main/resources/recentquotes.json");
-        FileReader jsonFileReader = new FileReader(jsonFile);
-        Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
-        ArrayList<Quotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
-        System.out.println(quotesArrayList.get(69).author);
+    public void run(String fileName) throws IOException {
+        //dis the URL
+        createRequest(fileName);
+
 
     }
+    public HttpURLConnection createRequest(String fileName) throws IOException {
+        //dis the URL
+        URL quoteUrl = new URL(fileName);
+        //we want type HttpURL connection so we must cast
+        HttpURLConnection quoteUrlConnection = (HttpURLConnection) quoteUrl.openConnection();
+        quoteUrlConnection.setRequestMethod(("GET"));
+
+        return quoteUrlConnection;
+    }
+    public StringBuffer readResponse(HttpURLConnection _connection) throws IOException
+    {
+        try(BufferedReader responseReader = new BufferedReader((
+                new InputStreamReader(_connection.getInputStream())
+        ))) {
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = responseReader.readLine()) != null) {
+                content.append(inputLine);
+            }
+            return content;
+        }
+    }
+
+
+    public Quotes parseQuote(StringBuffer _content)
+    {
+        Quotes newQuote = gson.fromJson(String.valueOf(_content), Quotes.class);
+        return newQuote;
+    }
+
+
 }
 
-
-
-
-
-
-//How do I use GSON?
-//What class(es) should I write to encapsulate this functionality?
-//How does the App class use the class(es) I write?
-//How do I test this functionality?

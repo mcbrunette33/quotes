@@ -3,12 +3,53 @@
  */
 package quotes;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    String fileName = "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en";
+    String starwarsApi = "http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote";
+
+    @Test
+    public void testCreateRequest200() throws IOException {
+        //arrange
+        App sut = new App();
+        //act
+        HttpURLConnection testConnection = sut.createRequest(fileName);
+        //assert
+        assertEquals(200, testConnection.getResponseCode());
+        return;
+    }
+
+
+    @Test
+    void testReadResponse() throws IOException
+    {
+        //arrange
+        App sut = new App();
+        HttpURLConnection testConnection = sut.createRequest(fileName);
+        //act
+        StringBuffer responseStringBuffer = sut.readResponse(testConnection);
+        //assert
+        assertNotNull(responseStringBuffer);
+    }
+
+    @Test
+    public void testParseQuoteFromResonse() throws IOException {
+        //arrange
+        App sut = new App();
+        HttpURLConnection test = sut.createRequest(fileName);
+        //act
+        StringBuffer responseStringBuffer = sut.readResponse(test);
+        Quotes newQuote = sut.parseQuote(responseStringBuffer);
+        //assert
+        assertNotNull(newQuote.quoteLink);
+        return;
     }
 }
