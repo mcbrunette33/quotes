@@ -11,7 +11,6 @@ public class Quotes {
     String quoteLink;
 
 
-
     @Override
     public String toString()
     {
@@ -24,12 +23,5 @@ public class Quotes {
                 "}";
     }
 
-    @Override
-    public String toString()
-    {
-        return "Quote{" +
-                "Author: " + author + "\n" +
-                "body: " + text + "}"+ "\n" ;
-    }
 
 }

@@ -46,7 +46,7 @@ public class App
 
         Quotes newQuote = parseQuote(responseBuffer);
         //for usage of ./gradlew test --args result will pring out content
-        //System.out.println(newQuote.toString());
+        System.out.println(newQuote.toString());
 
     }
 
