@@ -12,6 +12,7 @@ import java.net.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 public class App
 {
@@ -19,11 +20,7 @@ public class App
     public static void main(String[] args)
     {
         //Gson gson = new Gson();
-        //File jsonFile = new File("app/src/main/resources/recentquotes.json");
-        //FileReader jsonFileReader = new FileReader(jsonFile);
-        //Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
-        //ArrayList<Quotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
-        //System.out.println(quotesArrayList.get(69).author);
+
         try{
             new App().run(args[0]);
         }
@@ -36,14 +33,27 @@ public class App
     }
     public void run(String fileName) throws IOException
     {
+
         //dis the URL
         HttpURLConnection test = createRequest(fileName);
         StringBuffer responseBuffer =  readResponse(test);
+        boolean checker = responseBuffer.isEmpty();
+        if(checker == true)defaultQuote();
+
         Quotes newQuote = parseQuote(responseBuffer);
         //for usage of ./gradlew test --args result will pring out content
         System.out.println(newQuote.toString());
 
     }
+
+    public void defaultQuote() throws FileNotFoundException {
+        File jsonFile = new File("app/src/main/resources/recentquotes.json");
+        FileReader jsonFileReader = new FileReader(jsonFile);
+        Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
+        ArrayList<DefaultQuotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
+        System.out.println(quotesArrayList.get(new Random().nextInt(69)+0).author);
+    }
+
     public HttpURLConnection createRequest(String fileName) throws IOException
     {
         //dis the URL
