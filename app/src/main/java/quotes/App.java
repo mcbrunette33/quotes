@@ -14,14 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-<<<<<<< HEAD
-public class App {
-    public static void main(String[] args)
-    {
-        try{
-            new App().run();
-        }catch (IOException e)
-=======
+
 public class App
 {
     Gson gson = new Gson();
@@ -33,18 +26,11 @@ public class App
             new App().run(args[0]);
         }
         catch (IOException e)
->>>>>>> feature2
         {
             e.printStackTrace();
             System.exit(-1);
         }
-<<<<<<< HEAD
-    }
 
-    public void run() throws IOException
-    {
-        Gson gson = new Gson();
-=======
         return;
     }
     public void run(String fileName) throws IOException
@@ -60,12 +46,11 @@ public class App
 
         Quotes newQuote = parseQuote(responseBuffer);
         //for usage of ./gradlew test --args result will pring out content
-        System.out.println(newQuote.toString());
+        //System.out.println(newQuote.toString());
 
     }
 
     public void defaultQuote() throws FileNotFoundException {
->>>>>>> feature2
         File jsonFile = new File("app/src/main/resources/recentquotes.json");
         FileReader jsonFileReader = new FileReader(jsonFile);
         Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
