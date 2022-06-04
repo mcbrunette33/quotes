@@ -29,6 +29,15 @@ class AppTest {
         return;
     }
 
+    @Test
+    public void testBase() throws IOException
+    {
+        App sut = new App();
+        //sut.run(starwarsFile);
+        sut.run("");
+        return;
+    }
+
 
     @Test
     void testReadResponse() throws IOException

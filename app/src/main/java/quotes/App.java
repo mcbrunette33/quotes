@@ -17,13 +17,17 @@ import java.util.Random;
 
 public class App
 {
+    final String starwarsFile = "https://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote";
+    final String forismaticFileName = "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en";
+    String toPrint;
     Gson gson = new Gson();
     public static void main(String[] args)
-    {
-        //Gson gson = new Gson();
+    { //Gson gson = new Gson();
+
+        String arg = args.length > 0? args[0]: "default";
 
         try{
-            new App().run(args[0]);
+            new App().run(arg);
         }
         catch (IOException e)
         {
@@ -35,27 +39,46 @@ public class App
     }
     public void run(String fileName) throws IOException
     {
-
-        //dis the URL
-        HttpURLConnection test = fileName.equals("https://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote")?
-                secureCreateRequest(fileName):
-                createRequest(fileName);
-        StringBuffer responseBuffer =  readResponse(test);
-        boolean checker = responseBuffer.isEmpty();
-        if(checker == true)defaultQuote();
-
-        Quotes newQuote = parseQuote(responseBuffer);
-        //for usage of ./gradlew test --args result will pring out content
-        System.out.println(newQuote.toString());
+        switch(fileName)
+        {
+            case starwarsFile:
+                HttpsURLConnection testSecure = secureCreateRequest(fileName);
+                StringBuffer responseStringBuffSecure = readResponse(testSecure);
+                StarWars newQuoteSecure = parseStarWars(responseStringBuffSecure);
+                toPrint = newQuoteSecure.toString();
+                break;
+            case forismaticFileName:
+                HttpURLConnection test = createRequest(fileName);
+                StringBuffer responseStringBuff = readResponse(test);
+                Quotes newQuote = parseQuote(responseStringBuff);
+                toPrint = newQuote.toString();
+                break;
+            default:
+                defaultQuote();
+                return;
+        }
+        System.out.println(toPrint);
+        return;
 
     }
-
-    public void defaultQuote() throws FileNotFoundException {
-        File jsonFile = new File("app/src/main/resources/recentquotes.json");
-        FileReader jsonFileReader = new FileReader(jsonFile);
-        Type collectionType = new TypeToken<Collection<Quotes>>(){}.getType();
-        ArrayList<DefaultQuotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
-        System.out.println(quotesArrayList.get(new Random().nextInt(69)+0).author);
+    public void defaultQuote() throws IOException
+    {
+        Gson gson = new Gson();
+        File jsonFile = new File("src/main/resources/recentquotes.json");
+        try
+        {
+            int rand = new Random().nextInt(137 + 0 + 1);
+            FileReader jsonFileReader = new FileReader(jsonFile);
+            Type collectionType = new TypeToken<Collection<DefaultQuotes>>(){}.getType();
+            ArrayList<DefaultQuotes> quotesArrayList = gson.fromJson(jsonFileReader, collectionType);
+            System.out.println(quotesArrayList.get(rand).author);
+            System.out.println(quotesArrayList.get(rand).text);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     public HttpURLConnection createRequest(String fileName) throws IOException
